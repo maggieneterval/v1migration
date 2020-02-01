@@ -1,0 +1,93 @@
+{
+  "keepWaitingPipelines": false,
+  "lastModifiedBy": "anonymous",
+  "limitConcurrent": true,
+  "stages": [
+    {
+      "clusters": [
+        {
+          "account": "v1-cluster",
+          "application": "myapplication",
+          "cloudProvider": "kubernetes",
+          "containers": [
+            {
+              "args": [],
+              "command": [],
+              "envFrom": [],
+              "envVars": [],
+              "imageDescription": {
+                "account": "my-gcr-registry",
+                "imageId": "gcr.io/spinnaker-maggie/spinnaker-kubernetes-demo:1.2.3",
+                "registry": "gcr.io",
+                "repository": "spinnaker-maggie/spinnaker-kubernetes-demo",
+                "tag": "1.2.3"
+              },
+              "imagePullPolicy": "IFNOTPRESENT",
+              "limits": {
+                "cpu": null,
+                "memory": null
+              },
+              "livenessProbe": null,
+              "name": "spinnaker-maggie-spinnaker-kubernetes-demo",
+              "ports": [
+                {
+                  "containerPort": 80,
+                  "hostIp": null,
+                  "hostPort": null,
+                  "name": "http",
+                  "protocol": "TCP"
+                }
+              ],
+              "readinessProbe": null,
+              "requests": {
+                "cpu": null,
+                "memory": null
+              },
+              "volumeMounts": []
+            }
+          ],
+          "deployment": {
+            "deploymentStrategy": {
+              "rollingUpdate": {
+                "maxSurge": 1,
+                "maxUnavailable": 1
+              },
+              "type": "RollingUpdate"
+            },
+            "enabled": true,
+            "minReadySeconds": 0
+          },
+          "dnsPolicy": "ClusterFirst",
+          "freeFormDetails": "mydetail",
+          "initContainers": [],
+          "interestingHealthProviderNames": [
+            "KubernetesContainer",
+            "KubernetesPod"
+          ],
+          "loadBalancers": [
+            "myapplication-mystack-mydetail"
+          ],
+          "namespace": "default",
+          "nodeSelector": {},
+          "podAnnotations": {},
+          "provider": "kubernetes",
+          "region": "default",
+          "replicaSetAnnotations": {},
+          "stack": "mystack",
+          "strategy": "",
+          "targetSize": 2,
+          "terminationGracePeriodSeconds": 30,
+          "useSourceCapacity": false,
+          "volumeSources": []
+        }
+      ],
+      "isNew": true,
+      "name": "Deploy a Deployment (V1)",
+      "refId": "1",
+      "requisiteStageRefIds": [],
+      "type": "deploy"
+    }
+  ],
+  "triggers": [],
+  "updateTs": "1582743338076"
+}

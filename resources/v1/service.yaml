@@ -1,0 +1,19 @@
+# Resource YAML for a Service applied by the V1 provider
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  # Spinnaker sets name to: {app}-{stack}-{detail}
+  name: "myapplication-mystack-mydetail"
+  namespace: "default"
+spec:
+  clusterIP: "10.59.252.123"
+  ports:
+  - name: "http"
+    port: 80
+    protocol: "TCP"
+    targetPort: 8000
+  selector:
+    # Spinnaker added this label: load-balancer-{app}-{stack}-{detail}: "true"
+    load-balancer-myapplication-mystack-mydetail: "true"
+  sessionAffinity: "None"
+  type: "ClusterIP"

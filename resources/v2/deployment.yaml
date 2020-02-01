@@ -1,0 +1,64 @@
+# Resource YAML for a Deployment analogous to the V1-created Deployment
+# specified in resources/v1/deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    # Spinnaker adds this annotation automatically
+    moniker.spinnaker.io/application: v1migrationdemo
+    # Spinnaker adds this annotation automatically
+    moniker.spinnaker.io/cluster: deployment mydeployment
+    # MANUALLY ADDED: previously implicit in Frigga naming convention
+    moniker.spinnaker.io/stack: mystack
+    # MANUALLY ADDED: previously implicit in Frigga naming convention
+    moniker.spinnaker.io/detail: mydetail
+    # Spinnaker adds this annotation automatically
+    artifact.spinnaker.io/location: default
+    # Spinnaker adds this annotation automatically
+    artifact.spinnaker.io/name: mydeployment
+    # Spinnaker adds this annotation automatically
+    artifact.spinnaker.io/type: kubernetes/deployment
+  labels:
+    # Spinnaker adds this label automatically
+    app.kubernetes.io/managed-by: spinnaker
+    # Spinnaker adds this label automatically
+    app.kubernetes.io/name: myapplication
+  # In the V1 provider, Spinnaker set your resource name based on Frigga naming
+  # conventions: {app}-{stack}-{detail}. In the V2 provider, you can name
+  # resources anything.
+  name: mydeployment
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      # Spinnaker adds this label: {resource_name}: 'true'
+      myapplication-mystack-mydetail: 'true'
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        # We can remove all labels except two: one that matches the
+        # selector.matchLabel label, and one that matches the Service's
+        # selector.
+        #
+        # V1 added this label: load-balancer-{service_name}: "true"
+        # in order to associate this workload with the appropriate Service
+        load-balancer-myapplication-mystack-mydetail: 'true'
+        # V1 added this label: {app}-{stack}-{detail}: 'true'
+        myapplication-mystack-mydetail: 'true'
+    spec:
+      containers:
+      - image: 'gcr.io/spinnaker-maggie/spinnaker-kubernetes-demo:1.2.3'
+        imagePullPolicy: IfNotPresent
+        name: spinnaker-maggie-spinnaker-kubernetes-demo
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP

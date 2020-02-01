@@ -1,0 +1,88 @@
+{
+  "keepWaitingPipelines": false,
+  "lastModifiedBy": "anonymous",
+  "limitConcurrent": true,
+  "stages": [
+    {
+      "account": "v2-cluster",
+      "cloudProvider": "kubernetes",
+      "manifests": [
+        {
+          "apiVersion": "extensions/v1beta1",
+          "kind": "Deployment",
+          "metadata": {
+            "annotations": {
+              "moniker.spinnaker.io/detail": "mydetail",
+              "moniker.spinnaker.io/stack": "mystack"
+            },
+            "labels": {
+              "app.kubernetes.io/managed-by": "spinnaker",
+              "app.kubernetes.io/name": "myapplication"
+            },
+            "name": "mydeployment",
+            "namespace": "default"
+          },
+          "spec": {
+            "progressDeadlineSeconds": 600,
+            "replicas": 2,
+            "revisionHistoryLimit": 10,
+            "selector": {
+              "matchLabels": {
+                "myapplication-mystack-mydetail": "true"
+              }
+            },
+            "strategy": {
+              "rollingUpdate": {
+                "maxSurge": 1,
+                "maxUnavailable": 1
+              },
+              "type": "RollingUpdate"
+            },
+            "template": {
+              "metadata": {
+                "labels": {
+                  "load-balancer-myapplication-mystack-mydetail": "true",
+                  "myapplication-mystack-mydetail": "true"
+                }
+              },
+              "spec": {
+                "containers": [
+                  {
+                    "image": "gcr.io/spinnaker-maggie/spinnaker-kubernetes-demo:1.2.3",
+                    "imagePullPolicy": "IfNotPresent",
+                    "name": "spinnaker-maggie-spinnaker-kubernetes-demo",
+                    "ports": [
+                      {
+                        "containerPort": 80,
+                        "name": "http",
+                        "protocol": "TCP"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "moniker": {
+        "app": "myapplication"
+      },
+      "name": "Deploy (Manifest)",
+      "refId": "1",
+      "requisiteStageRefIds": [],
+      "skipExpressionEvaluation": false,
+      "source": "text",
+      "trafficManagement": {
+        "enabled": false,
+        "options": {
+          "enableTraffic": false,
+          "services": []
+        }
+      },
+      "type": "deployManifest"
+    }
+  ],
+  "triggers": [],
+  "updateTs": "1582758106964"
+}

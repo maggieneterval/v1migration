@@ -1,0 +1,17 @@
+# No changes are required to use a V1-created Service with the V2 provider.
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "myapplication-mystack-mydetail"
+  namespace: "default"
+spec:
+  clusterIP: "10.59.252.123"
+  ports:
+  - name: "http"
+    port: 80
+    protocol: "TCP"
+    targetPort: 8000
+  selector:
+    load-balancer-myapplication-mystack-mydetail: "true"
+  sessionAffinity: "None"
+  type: "ClusterIP"

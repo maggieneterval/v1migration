@@ -1,0 +1,49 @@
+# Resource YAML for a Deployment applied by the V1 provider using the pipeline
+# specified by deploy_pipeline.json
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  # Spinnaker sets name to: {app}-{stack}-{detail}
+  name: myapplication-mystack-mydetail
+  namespace: default
+spec:
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      # Spinnaker adds this label: {resource_name}: 'true'
+      myapplication-mystack-mydetail: 'true'
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        # Spinnaker adds this label: app: {app}
+        app: myapplication
+        # Spinnaker adds this label: cluster: {app}-{stack}-{detail}
+        cluster: myapplication-mystack-mydetail
+        # Spinnaker adds this label: detail: {detail}
+        detail: mydetail
+        # Spinnaker adds this label: load-balancer-{service_name}: "true"
+        # in order to associate this workload with the appropriate Service
+        load-balancer-myapplication-mystack-mydetail: 'true'
+        # Spinnaker adds this label: {app}-{stack}-{detail}: 'true'
+        myapplication-mystack-mydetail: 'true'
+        # Spinnaker adds this label: replication-controller: {app}-{stack}-{detail}-{version}
+        replication-controller: myapplication-mystack-mydetail-v000
+        # Spinnaker adds this label: stack: {stack}
+        stack: mystack
+        # Spinnaker adds this label: version: {version}
+        version: '0'
+    spec:
+      containers:
+      - image: 'gcr.io/spinnaker-maggie/spinnaker-kubernetes-demo:1.2.3'
+        imagePullPolicy: IfNotPresent
+        name: spinnaker-maggie-spinnaker-kubernetes-demo
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
